@@ -1,7 +1,7 @@
 import argparse
 from train import train
-from evaluate import evaluate
-from validate import validate
+#from evaluate import evaluate
+#from validate import validate
 
 def get_options():
     parser = argparse.ArgumentParser()
@@ -17,12 +17,12 @@ def get_options():
     parser.add_argument("--eval", action = 'store_true')
     parser.add_argument("--validate", action = 'store_true')
     args = parser.parse_args()
-    #train(args.epochs, args.lr, args.momentum, args.decay, args.display)
-    if args.eval:
-        evaluate()
-    elif args.validate:
-        validate(args.display)
-    else:
-        train(args.epochs, args.lr, args.n_class, args.in_channel, args.display, save=args.save, load=args.load)
+    train(args.epochs, args.lr, args.n_class, args.in_channel, args.display, save=args.save, load=args.load)
+    #if args.eval:
+    #    evaluate()
+    #elif args.validate:
+    #    validate(args.display)
+    #else:
+    #    train(args.epochs, args.lr, args.n_class, args.in_channel, args.display, save=args.save, load=args.load)
 
-#get_options()
+get_options()

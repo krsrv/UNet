@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 
-def create_kernel(kernel_size=23, sigma=6):
+def create_kernel(kernel_size=23, sigma=9):
 	""" Create a 2D Gaussian kernel """
 
 	"""
