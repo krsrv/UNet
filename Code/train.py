@@ -71,7 +71,7 @@ def train(epochs=10, lr=0.001, n_class=1, in_channel=1, display=False, save=Fals
             if display:
               T.ToPILImage()(outputs[0].float()).show()
 
-            loss = criterion(outputs.float(), label.float().unsqueeze(0))
+            loss = criterion(outputs.float(), label.float())
             loss.backward()
             
             epoch_loss = epoch_loss + loss.item()
