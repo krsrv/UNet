@@ -74,7 +74,7 @@ class UNet(nn.Module):
     self.reduce = nn.Sequential(\
       nn.Conv2d(64,n_class,1,padding=0),\
       nn.ReLU(),\
-      #nn.Conv2d(n_class,n_class,1,padding=0),\
+      nn.Conv2d(n_class,n_class,1,padding=0),\
       nn.Sigmoid()\
     )
 
