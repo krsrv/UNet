@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader
 from torch.nn import functional as F
 from torchvision.transforms import Compose
 from model import UNet
-from dataset import Segmentation, RandomAffine, Pad, RandomFlip, CenterCrop, ToTensor, RandomWarp
+from dataset import Segmentation, RandomAffine, Pad, RandomFlip, CenterCrop, ToTensor, RandomWarp, RandomCrop
 
 from torchvision import transforms as T
 from PIL import Image
@@ -31,7 +31,7 @@ def train(epochs=10, lr=0.001, n_class=1, in_channel=1, display=False, save=Fals
     dataset = Segmentation(directory, 'training.json', transform = Compose([ \
       #Pad(150, mode='symmetric'), \
       #RandomAffine((0, 90), (30, 30)), \
-      #CenterCrop(512, 512), \
+      RandomCrop((512, 512)), \
       #RandomFlip(), \
       #RandomWarp(), \
       ToTensor()
