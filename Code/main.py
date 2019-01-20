@@ -16,8 +16,9 @@ def get_options():
     parser.add_argument("--load", action = 'store_true')
     parser.add_argument("--eval", action = 'store_true')
     parser.add_argument("--validate", action = 'store_true')
+    parser.add_argument("--directory", dest="directory", help="directory where training data is stored", default='../Data/train/')
     args = parser.parse_args()
-    train(args.epochs, args.lr, args.n_class, args.in_channel, args.display, save=args.save, load=args.load)
+    train(args.epochs, args.lr, args.n_class, args.in_channel, args.display, save=args.save, load=args.load, directory = args.directory)
     #if args.eval:
     #    evaluate()
     #elif args.validate:

@@ -10,15 +10,6 @@ from torchvision import transforms as T
 from PIL import Image
 import numpy as np
 
-# Dataset
-dataset = Segmentation('../Data/train/training.json', transform = Compose([ \
-  #Pad(150, mode='symmetric'), \
-  #RandomAffine((0, 90), (30, 30)), \
-	#CenterCrop(512, 512), \
-	#RandomFlip(), \
-	#RandomWarp(), \
-	ToTensor()
-]))
 
 # Neural network
 
@@ -35,10 +26,24 @@ def get_checkpoint(model, optimizer, loss):
       loss.extend(checkpoint['loss_log'])
 
 #def train(epochs, lr, momentum, decay, display):
-def train(epochs=10, lr=0.001, n_class=1, in_channel=1, display=False, save=False, load=False):
+def train(epochs=10, lr=0.001, n_class=1, in_channel=1, display=False, save=False, load=False, directory='../Data/train/'):
+    # Dataset
+    dataset = Segmentation(directory, 'training.json', transform = Compose([ \
+      #Pad(150, mode='symmetric'), \
+      #RandomAffine((0, 90), (30, 30)), \
+      #CenterCrop(512, 512), \
+      #RandomFlip(), \
+      #RandomWarp(), \
+      ToTensor()
+    ]))
+
     #optimizer = torch.optim.SGD(model.parameters(), lr = lr, momentum = momentum, weight_decay = decay)
     print("Training {} epochs, on images with {} channels".format(epochs, in_channel))
+
+    # Neural network model
     model = UNet(n_class, in_channel).cuda() if torch.cuda.is_available() else UNet(n_class, in_channel)
+
+    # Optimizer
     optimizer = torch.optim.Adam(model.parameters(),lr = lr)
     loss_log = []
 

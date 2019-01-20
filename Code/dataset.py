@@ -159,7 +159,7 @@ class RandomAffine(object):
 class Segmentation(Dataset):
   """ Segmentation dataset """
 
-  def __init__(self,json_file='../Data/train/training.json',transform = None):
+  def __init__(self,directory='../Data/train/',json_file='training.json',transform = None):
     """
     Args:
       json_file (string): path to json file which contains image metadata
@@ -167,7 +167,8 @@ class Segmentation(Dataset):
         on a sample
     """
 
-    self.json_path = json_file
+    self.json_path = directory + json_file
+    self.directory = directory
     with open(self.json_path) as F:
       self.data = json.load(F)
     self.data = [datum['image'] for datum in self.data]
@@ -178,8 +179,8 @@ class Segmentation(Dataset):
   
   def __getitem__(self, idx):
     sample = {
-      'image': Image.open('../Data/train/images/' + self.data[idx]['pathname'][8:]),
-      'label': Image.open('../Data/train/labels/' + self.data[idx]['pathname'][8:]),
+      'image': Image.open(self.directory + 'images/' + self.data[idx]['pathname'][8:]),
+      'label': Image.open(self.directory + 'labels/' + self.data[idx]['pathname'][8:]),
     }
         
     if self.transform:
