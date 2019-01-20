@@ -17,8 +17,9 @@ def get_options():
     parser.add_argument("--eval", action = 'store_true')
     parser.add_argument("--validate", action = 'store_true')
     parser.add_argument("--directory", dest="directory", help="directory where training data is stored", default='../Data/train/')
+    parser.add_argument("--loss", dest="loss", help="choose loss function", default='BCE')
     args = parser.parse_args()
-    train(args.epochs, args.lr, args.n_class, args.in_channel, args.display, save=args.save, load=args.load, directory = args.directory)
+    train(args.epochs, args.lr, args.n_class, args.in_channel, args.loss, args.display, save=args.save, load=args.load, directory = args.directory)
     #if args.eval:
     #    evaluate()
     #elif args.validate:
