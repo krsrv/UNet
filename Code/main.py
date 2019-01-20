@@ -18,8 +18,9 @@ def get_options():
     parser.add_argument("--validate", action = 'store_true')
     parser.add_argument("--directory", dest="directory", help="directory where training data is stored", default='../Data/train/')
     parser.add_argument("--loss", dest="loss", help="choose loss function", default='BCE')
+    parser.add_argument("--image-size", type=int, dest="img_size", help="choose input image size", default=None)
     args = parser.parse_args()
-    train(args.epochs, args.lr, args.n_class, args.in_channel, args.loss, args.display, save=args.save, load=args.load, directory = args.directory)
+    train(args.epochs, args.lr, args.n_class, args.in_channel, args.loss, args.display, save=args.save, load=args.load, directory = args.directory, img_size = args.img_size)
     #if args.eval:
     #    evaluate()
     #elif args.validate:

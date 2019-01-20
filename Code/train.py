@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader
 from torch.nn import functional as F
 from torchvision.transforms import Compose
 from model import UNet
-from dataset import Segmentation, RandomAffine, Pad, RandomFlip, CenterCrop, ToTensor, RandomWarp
+from dataset import Segmentation, RandomAffine, Pad, RandomFlip, CenterCrop, ToTensor, RandomWarp, RandomCrop
 
 from torchvision import transforms as T
 from PIL import Image
@@ -25,18 +25,21 @@ def get_checkpoint(model, optimizer, loss):
       optimizer.load_state_dict(checkpoint['optimizer'])
       loss.extend(checkpoint['loss_log'])
 
-#def train(epochs, lr, momentum, decay, display):
-def train(epochs=10, lr=0.001, n_class=1, in_channel=1, loss='BCE', display=False, save=False, load=False, directory='../Data/train/'):
-    # Dataset
-    dataset = Segmentation(directory, 'training.json', transform = Compose([ \
-      #Pad(150, mode='symmetric'), \
-      #RandomAffine((0, 90), (30, 30)), \
-      CenterCrop(512, 512), \
-      #RandomFlip(), \
-      #RandomWarp(), \
-      ToTensor()
-    ]))
+def get_dataset(directory, img_size):
+    if img_size == None:
+      return Segmentation(directory, 'training.json', \
+        transform = ToTensor())
+    else:
+      return Segmentation(directory, 'training.json', \
+        transform = Compose([ \
+          RandomCrop((img_size, img_size)), \
+          ToTensor()
+        ]))
 
+def train(epochs=10, lr=0.001, n_class=1, in_channel=1, loss_fn='BCE', display=False, save=False, load=False, directory='../Data/train/', img_size=None):
+    # Dataset
+    dataset = get_dataset(directory, img_size)
+    
     #optimizer = torch.optim.SGD(model.parameters(), lr = lr, momentum = momentum, weight_decay = decay)
     print("Training {} epochs, on images with {} channels".format(epochs, in_channel))
 
@@ -51,7 +54,7 @@ def train(epochs=10, lr=0.001, n_class=1, in_channel=1, loss='BCE', display=Fals
         get_checkpoint(model, optimizer, loss_log)
 
     criterion = torch.nn.BCELoss()
-    if loss == 'CE':
+    if loss_fn == 'CE':
       criterion = torch.nn.CrossEntropyLoss()
 
     for epoch in range(epochs):
@@ -73,9 +76,9 @@ def train(epochs=10, lr=0.001, n_class=1, in_channel=1, loss='BCE', display=Fals
             if display:
               T.ToPILImage()(outputs[0].float()).show()
 
-            if loss == 'CE':
+            if loss_fn == 'CE':
               label = label.squeeze(1).long()
-            elif loss == 'BCE':
+            elif loss_fn == 'BCE':
               label = label.float()
 
             loss = criterion(outputs, label)
