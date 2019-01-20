@@ -50,12 +50,13 @@ def train(epochs=10, lr=0.001, n_class=1, in_channel=1, display=False, save=Fals
     if load:
         get_checkpoint(model, optimizer, loss_log)
 
-    criterion = torch.nn.BCELoss(reduction='mean')
+    #criterion = torch.nn.BCELoss(reduction='mean')
+    criterion = torch.nn.CrossEntropyLoss()
 
     for epoch in range(epochs):
         #print("Starting Epoch #{}".format(epoch))
 
-        train_loader = DataLoader(dataset=dataset, batch_size=1, shuffle=True)
+        train_loader = DataLoader(dataset=dataset, batch_size=2, shuffle=True)
         epoch_loss = 0
 
         for i,images in enumerate(train_loader):
@@ -71,7 +72,7 @@ def train(epochs=10, lr=0.001, n_class=1, in_channel=1, display=False, save=Fals
             if display:
               T.ToPILImage()(outputs[0].float()).show()
 
-            loss = criterion(outputs.float(), label.float())
+            loss = criterion(outputs.float(), label.squeeze(1).long())
             loss.backward()
             
             epoch_loss = epoch_loss + loss.item()
