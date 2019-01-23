@@ -25,20 +25,20 @@ def get_checkpoint(model, optimizer, loss):
       optimizer.load_state_dict(checkpoint['optimizer'])
       loss.extend(checkpoint['loss_log'])
 
-def get_dataset(directory, img_size):
+def get_dataset(directory, img_size, data_size=None):
     if img_size == None:
       return Segmentation(directory, 'training.json', \
-        transform = ToTensor())
+        transform = ToTensor(), data_size=data_size)
     else:
       return Segmentation(directory, 'training.json', \
         transform = Compose([ \
           RandomCrop((img_size, img_size)), \
           ToTensor()
-        ]))
+        ]), data_size=data_size)
 
-def train(epochs=10, lr=0.001, n_class=1, in_channel=1, loss_fn='BCE', display=False, save=False, load=False, directory='../Data/train/', img_size=None):
+def train(epochs=10, lr=0.001, n_class=1, in_channel=1, loss_fn='BCE', display=False, save=False, load=False, directory='../Data/train/', img_size=None, data_size=None):
     # Dataset
-    dataset = get_dataset(directory, img_size)
+    dataset = get_dataset(directory, img_size, data_size)
     
     #optimizer = torch.optim.SGD(model.parameters(), lr = lr, momentum = momentum, weight_decay = decay)
     print("Training {} epochs, on images with {} channels".format(epochs, in_channel))

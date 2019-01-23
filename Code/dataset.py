@@ -159,7 +159,8 @@ class RandomAffine(object):
 class Segmentation(Dataset):
   """ Segmentation dataset """
 
-  def __init__(self,directory='../Data/train/',json_file='training.json',transform = None):
+  def __init__(self,directory='../Data/train/',json_file='training.json',\
+    transform=T.ToTensor(), data_size=None):
     """
     Args:
       json_file (string): path to json file which contains image metadata
@@ -173,9 +174,13 @@ class Segmentation(Dataset):
       self.data = json.load(F)
     self.data = [datum['image'] for datum in self.data]
     self.transform = transform
+    self.dataset_size = data_size
   
   def __len__(self):
-    return 250 #len(self.data)
+    if self.dataset_size == None:
+      return len(self.data)
+    else:
+      return self.dataset_size
   
   def __getitem__(self, idx):
     sample = {
