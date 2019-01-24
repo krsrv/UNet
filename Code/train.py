@@ -36,12 +36,15 @@ def get_dataset(directory, img_size, data_size=None):
           ToTensor()
         ]), data_size=data_size)
 
-def train(epochs=10, lr=0.001, n_class=1, in_channel=1, loss_fn='BCE', display=False, save=False, load=False, directory='../Data/train/', img_size=None, data_size=None):
+def train(epochs=10, lr=0.001, n_class=1, in_channel=1, loss_fn='BCE', display=False, save=False, \
+  load=False, directory='../Data/train/', img_size=None, data_size=None):
     # Dataset
     dataset = get_dataset(directory, img_size, data_size)
     
     #optimizer = torch.optim.SGD(model.parameters(), lr = lr, momentum = momentum, weight_decay = decay)
-    print("Training {} epochs, on images with {} channels".format(epochs, in_channel))
+    print("Epochs:\t{}\nLearning Rate:\t{}\nOutput classes:\t{}\nInput channels:\t{}\n\
+Loss function:\t{}\nImage cropping size:\t{}\nDataset size:\t{}\n".format(epochs, lr, n_class, \
+in_channel, loss_fn, img_size, data_size))
 
     # Neural network model
     model = UNet(n_class, in_channel).cuda() if torch.cuda.is_available() else UNet(n_class, in_channel)
@@ -55,7 +58,10 @@ def train(epochs=10, lr=0.001, n_class=1, in_channel=1, loss_fn='BCE', display=F
 
     criterion = torch.nn.BCELoss()
     if loss_fn == 'CE':
-      criterion = torch.nn.CrossEntropyLoss()
+      weights = torch.Tensor([90,10])
+      if torch.cuda.is_available():
+        weights = weights.cuda()
+      criterion = torch.nn.CrossEntropyLoss(weight=weights)
 
     for epoch in range(epochs):
         #print("Starting Epoch #{}".format(epoch))
@@ -88,8 +94,8 @@ def train(epochs=10, lr=0.001, n_class=1, in_channel=1, loss_fn='BCE', display=F
             
             optimizer.step()
 
-            if i % 10 == 0 :
-                print("Epoch #{} Batch #{} Loss: {}".format(epoch,i,loss.item()))
+            #if i % 10 == 0 :
+            #    print("Epoch #{} Batch #{} Loss: {}".format(epoch,i,loss.item()))
         loss_log.append(epoch_loss)
         
         #print("Epoch",epoch," finished. Loss :",loss.item())
