@@ -13,7 +13,9 @@ def get_options():
     parser.add_argument("-i","--in_channel", type=int, dest="in_channel", help="number of input channels", default=1)
     parser.add_argument("--display", action = 'store_true')
     parser.add_argument("--save", action = 'store_true')
+    parser.add_argument("--save-file", dest="save_file", default=None)
     parser.add_argument("--load", action = 'store_true')
+    parser.add_argument("--load-file", dest="load_file", default=None)
     parser.add_argument("--eval", action = 'store_true')
     parser.add_argument("--validate", action = 'store_true')
     parser.add_argument("--directory", dest="directory", help="directory where training data is stored", default='../Data/train/')
@@ -21,7 +23,7 @@ def get_options():
     parser.add_argument("--image-size", type=int, dest="img_size", help="choose input image size", default=None)
     parser.add_argument("--dataset-size", type=int, dest="data_size", help="number of images in an epoch", default=None)
     args = parser.parse_args()
-    train(args.epochs, args.lr, args.n_class, args.in_channel, args.loss, args.display, save=args.save, load=args.load, directory=args.directory, img_size=args.img_size, data_size=args.data_size)
+    train(args.epochs, args.lr, args.n_class, args.in_channel, args.loss, args.display, save=args.save, load=args.load, directory=args.directory, img_size=args.img_size, data_size=args.data_size, load_file=args.load_file, save_file=args.save_file)
     #if args.eval:
     #    evaluate()
     #elif args.validate:
