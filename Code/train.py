@@ -10,8 +10,7 @@ from torchvision import transforms as T
 from PIL import Image
 import numpy as np
 
-
-# Neural network
+from random import random
 
 def save_checkpoint(checkpt, filename):
     torch.save(checkpt,filename)
@@ -38,6 +37,8 @@ def get_dataset(directory, img_size, data_size=None):
 
 def train(epochs=10, lr=0.001, n_class=1, in_channel=1, loss_fn='BCE', display=False, save=False, \
   load=False, directory='../Data/train/', img_size=None, data_size=None):
+    #if torch.cuda.is_available():
+    #  torch.cuda.set_device(1)
     # Dataset
     dataset = get_dataset(directory, img_size, data_size)
     
@@ -58,7 +59,7 @@ in_channel, loss_fn, img_size, data_size))
 
     criterion = torch.nn.BCELoss()
     if loss_fn == 'CE':
-      weights = torch.Tensor([90,10])
+      weights = torch.Tensor([10,90])
       if torch.cuda.is_available():
         weights = weights.cuda()
       criterion = torch.nn.CrossEntropyLoss(weight=weights)
@@ -66,7 +67,7 @@ in_channel, loss_fn, img_size, data_size))
     for epoch in range(epochs):
         #print("Starting Epoch #{}".format(epoch))
 
-        train_loader = DataLoader(dataset=dataset, batch_size=2, shuffle=True)
+        train_loader = DataLoader(dataset=dataset, batch_size=1, shuffle=True)
         epoch_loss = 0
 
         for i,images in enumerate(train_loader):
