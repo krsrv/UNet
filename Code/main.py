@@ -1,7 +1,7 @@
 import argparse
 from train import train
 #from evaluate import evaluate
-#from validate import validate
+from validate import validate
 
 def get_options():
     parser = argparse.ArgumentParser()
@@ -23,7 +23,10 @@ def get_options():
     parser.add_argument("--image-size", type=int, dest="img_size", help="choose input image size", default=None)
     parser.add_argument("--dataset-size", type=int, dest="data_size", help="number of images in an epoch", default=None)
     args = parser.parse_args()
-    train(args.epochs, args.lr, args.n_class, args.in_channel, args.loss, args.display, save=args.save, load=args.load, directory=args.directory, img_size=args.img_size, data_size=args.data_size, load_file=args.load_file, save_file=args.save_file)
+    if args.validate:
+        validate(args.lr, args.n_class, args.in_channel, args.loss, args.display, directory=args.directory, img_size=args.img_size, data_size=args.data_size, load_file=args.load_file)
+    else:
+        train(args.epochs, args.lr, args.n_class, args.in_channel, args.loss, args.display, save=args.save, load=args.load, directory=args.directory, img_size=args.img_size, data_size=args.data_size, load_file=args.load_file, save_file=args.save_file)
     #if args.eval:
     #    evaluate()
     #elif args.validate:
